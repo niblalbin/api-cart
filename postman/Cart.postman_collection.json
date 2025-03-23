@@ -1,0 +1,293 @@
+{
+	"info": {
+		"_postman_id": "6cc76137-b1f5-4293-9e02-25663c381797",
+		"name": "Cart",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "38877377"
+	},
+	"item": [
+		{
+			"name": "Crea carrello",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Carrello creato con successo\", () => {\r",
+							"    pm.response.to.have.status(201);\r",
+							"    pm.expect(pm.response.json().success).to.be.true;\r",
+							"    pm.expect(pm.response.json().data).to.be.an('object');\r",
+							"    pm.expect(pm.response.json().data.id).to.be.a('number');\r",
+							"    \r",
+							"    pm.globals.set('cart_id', pm.response.json().data.id);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token_auth}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "ecommerce_id",
+							"value": "1",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8080/api/carts",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"carts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Visualizza lista carrelli",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Lista carrelli restituita correttamente\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.expect(pm.response.json().success).to.be.true;\r",
+							"    pm.expect(pm.response.json().data).to.be.an('array');\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token_auth}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8080/api/carts",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"carts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Visualizza carrello",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Dettaglio carrello restituito correttamente\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.expect(pm.response.json().success).to.be.true;\r",
+							"    pm.expect(pm.response.json().data).to.be.an('object');\r",
+							"    pm.expect(pm.response.json().data.id).to.equal(parseInt(pm.globals.get('cart_id')));\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token_auth}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8080/api/carts/{{cart_id}}",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"carts",
+						"{{cart_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Aggiungi prodotto nel carrello",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Prodotto aggiunto al carrello con successo\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.expect(pm.response.json().success).to.be.true;\r",
+							"    pm.expect(pm.response.json().data).to.be.an('object');\r",
+							"    pm.expect(pm.response.json().data.items).to.be.an('array');\r",
+							"    pm.expect(pm.response.json().data.items.length).to.be.greaterThan(0);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token_auth}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "product_id",
+							"value": "{{product_id}}",
+							"type": "text"
+						},
+						{
+							"key": "quantity",
+							"value": "10",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8080/api/carts/{{cart_id}}/items",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"carts",
+						"{{cart_id}}",
+						"items"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Checkout del carrello",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Checkout del carrello completato con successo\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.expect(pm.response.json().success).to.be.true;\r",
+							"    pm.expect(pm.response.json().data).to.be.an('object');\r",
+							"    pm.expect(pm.response.json().data.cart_status_id).to.equal(3); // Assumendo che 3 sia l'ID dello stato \"checkout\"\r",
+							"    pm.expect(pm.response.json().data.date_checkout).to.not.be.null;\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token_auth}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8080/api/carts/{{cart_id}}/checkout",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"carts",
+						"{{cart_id}}",
+						"checkout"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
